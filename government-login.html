@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriMarket | Government Portal</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+ font-family:Arial,sans-serif;
+ background:#f1f5f9;
+ color:#1e293b;
+}
+header{
+ background:#123c2b;
+ color:white;
+ padding:18px 5%;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:12px;
+}
+header h2{font-size:21px}
+button{
+ border:0;
+ padding:11px 17px;
+ border-radius:7px;
+ cursor:pointer;
+ font-weight:bold;
+}
+.logout{background:#ef4444;color:white}
+.container{padding:25px 5%;max-width:1250px;margin:auto}
+.login-box{
+ max-width:420px;
+ margin:75px auto;
+ background:white;
+ padding:30px;
+ border-radius:15px;
+ box-shadow:0 5px 25px #0001;
+}
+.login-box h2{text-align:center;color:#14532d;margin-bottom:10px}
+.login-box p{text-align:center;color:#64748b;margin-bottom:25px}
+input{
+ width:100%;
+ padding:13px;
+ margin:9px 0 17px;
+ border:1px solid #cbd5e1;
+ border-radius:7px;
+ font-size:15px;
+}
+label{font-weight:bold;font-size:14px}
+.login-btn{
+ width:100%;
+ background:#15803d;
+ color:white;
+ font-size:16px;
+}
+.error{color:#dc2626;text-align:center;margin-top:12px}
+.demo{
+ background:#f0fdf4;
+ padding:12px;
+ border-radius:8px;
+ margin-top:18px;
+ font-size:13px;
+ color:#166534;
+ line-height:1.7;
+}
+.hidden{display:none}
+.welcome{margin-bottom:22px}
+.welcome h2{font-size:25px;margin-bottom:7px}
+.welcome p{color:#64748b}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:15px;
+ margin:22px 0;
+}
+.stat{
+ background:white;
+ padding:20px;
+ border-radius:12px;
+ box-shadow:0 3px 12px #0000000a;
+ border-left:4px solid #16a34a;
+}
+.stat p{color:#64748b;font-size:14px}
+.stat h2{font-size:26px;margin-top:10px;color:#14532d}
+.panel{
+ background:white;
+ border-radius:12px;
+ padding:20px;
+ margin-top:20px;
+ box-shadow:0 3px 12px #0000000a;
+}
+.panel h3{margin-bottom:15px}
+.search{max-width:400px}
+table{width:100%;border-collapse:collapse;min-width:750px}
+th,td{
+ padding:14px 12px;
+ text-align:left;
+ border-bottom:1px solid #e2e8f0;
+ font-size:14px;
+}
+th{background:#f8fafc;color:#475569}
+tr.clickable{cursor:pointer}
+tr.clickable:hover{background:#f0fdf4}
+.score{font-weight:bold;color:#15803d}
+.status{
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:12px;
+ background:#dcfce7;
+ color:#166534;
+}
+.pending{background:#fef3c7;color:#92400e}
+.rejected{background:#fee2e2;color:#991b1b}
+.table-wrap{overflow-x:auto}
+.details{
+ background:white;
+ border-radius:12px;
+ padding:22px;
+ margin-top:20px;
+ box-shadow:0 3px 12px #0000000a;
+}
+.detail-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:14px;
+ margin:20px 0;
+}
+.detail-item{
+ background:#f8fafc;
+ padding:15px;
+ border-radius:8px;
+}
+.detail-item small{color:#64748b}
+.detail-item h3{margin-top:7px;font-size:17px}
+.back{background:#e2e8f0;color:#334155;margin-bottom:15px}
+.notice{
+ background:#fff7ed;
+ color:#9a3412;
+ padding:12px;
+ border-radius:8px;
+ font-size:13px;
+ line-height:1.6;
+ margin-top:18px;
+}
+footer{text-align:center;padding:25px;color:#64748b;font-size:13px}
+</style>
+</head>
+
+<body>
+
+<header>
+ <h2>🌾 AgriMarket Government Portal</h2>
+ <button class="logout hidden" id="logoutBtn" onclick="logout()">Logout</button>
+</header>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="container">
+ <div class="login-box">
+  <h2>Government Login</h2>
+  <p>Official Monitoring Dashboard</p>
+
+  <form onsubmit="login(event)">
+   <label>Government Username</label>
+   <input type="text" id="username" placeholder="Enter username" required>
+
+   <label>Password</label>
+   <input type="password" id="password" placeholder="Enter password" required>
+
+   <button class="login-btn" type="submit">Login to Dashboard</button>
+  </form>
+
+  
+  
+  <div id="error" class="error"></div>
+ </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="container hidden">
+
+ <div class="welcome">
+  <h2>Government Dashboard</h2>
+  <p>Welcome, Government Administrator. Monitor farmer records and performance.</p>
+ </div>
+
+ <div class="stats">
+  <div class="stat">
+   <p>Total Farmers</p>
+   <h2 id="totalFarmers">0</h2>
+  </div>
+  <div class="stat">
+   <p>Verified Farmers</p>
+   <h2 id="verifiedFarmers">0</h2>
+  </div>
+  <div class="stat">
+   <p>Average Demo Credit Score</p>
+   <h2 id="averageScore">0</h2>
+  </div>
+  <div class="stat">
+   <p>Total Recorded Sales</p>
+   <h2 id="totalSales">₹0</h2>
+  </div>
+ </div>
+
+ <div class="panel">
+  <h3>👨‍🌾 Registered Farmers</h3>
+  <input class="search" id="searchInput" type="text"
+   placeholder="Search farmer name or ID..." oninput="renderFarmers()">
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>Farmer ID</th>
+      <th>Farmer Name</th>
+      <th>Main Crop</th>
+      <th>Sales</th>
+      <th>Credit Score</th>
+      <th>Verification</th>
+     </tr>
+    </thead>
+    <tbody id="farmerTable"></tbody>
+   </table>
+  </div>
+
+  <p style="font-size:13px;color:#64748b;margin-top:12px">
+   Click on any farmer record to view complete details.
+  </p>
+ </div>
+
+ <div id="farmerDetails" class="details hidden"></div>
+
+ <div class="notice">
+  <b>Important Demo Notice:</b> Farmer records and credit scores shown here are sample data for project demonstration only. They are not real government records or bank credit bureau scores.
+ </div>
+</div>
+
+<footer>© 2026 AgriMarket | Government Monitoring Portal</footer>
+
+<script>
+const farmers = [
+ {
+  id:"FARM001",
+  name:"Rahul Kumar",
+  phone:"9876543210",
+  address:"Dhanbad, Jharkhand",
+  crop:"Wheat",
+  land:"3 Acres",
+  sales:85000,
+  score:820,
+  loan:"Approved",
+  verification:"Verified",
+  products:"Wheat"
+ },
+ {
+  id:"FARM002",
+  name:"Amit Singh",
+  phone:"9876543211",
+  address:"Bokaro, Jharkhand",
+  crop:"Rice",
+  land:"2 Acres",
+  sales:65000,
+  score:710,
+  loan:"Pending",
+  verification:"Verified",
+  products:"Rice"
+ },
+ {
+  id:"FARM003",
+  name:"Suresh Das",
+  phone:"9876543212",
+  address:"Giridih, Jharkhand",
+  crop:"Tomato",
+  land:"1.5 Acres",
+  sales:45000,
+  score:580,
+  loan:"Not Applied",
+  verification:"Pending",
+  products:"Tomato"
+ },
+ {
+  id:"FARM004",
+  name:"Ramesh Yadav",
+  phone:"9876543213",
+  address:"Ranchi, Jharkhand",
+  crop:"Potato",
+  land:"4 Acres",
+  sales:95000,
+  score:780,
+  loan:"Approved",
+  verification:"Verified",
+  products:"Potato"
+ },
+ {
+  id:"FARM005",
+  name:"Manoj Sharma",
+  phone:"9876543214",
+  address:"Hazaribagh, Jharkhand",
+  crop:"Onion",
+  land:"2.5 Acres",
+  sales:35000,
+  score:490,
+  loan:"Rejected",
+  verification:"Pending",
+  products:"Onion"
+ }
+];
+
+function login(event){
+ event.preventDefault();
+
+ const user=document.getElementById("username").value.trim();
+ const pass=document.getElementById("password").value;
+
+ if(user==="GOVADMIN" && pass==="Gov@123"){
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("logoutBtn").classList.remove("hidden");
+  document.getElementById("error").innerText="";
+  loadDashboard();
+ }else{
+  document.getElementById("error").innerText="Invalid username or password!";
+ }
+}
+
+function loadDashboard(){
+ const total=farmers.length;
+ const verified=farmers.filter(f=>f.verification==="Verified").length;
+ const average=Math.round(farmers.reduce((sum,f)=>sum+f.score,0)/total);
+ const sales=farmers.reduce((sum,f)=>sum+f.sales,0);
+
+ document.getElementById("totalFarmers").innerText=total;
+ document.getElementById("verifiedFarmers").innerText=verified;
+ document.getElementById("averageScore").innerText=average;
+ document.getElementById("totalSales").innerText=
+  "₹"+sales.toLocaleString("en-IN");
+
+ renderFarmers();
+}
+
+function renderFarmers(){
+ const search=document.getElementById("searchInput").value.toLowerCase();
+
+ const filtered=farmers.filter(f=>
+  f.name.toLowerCase().includes(search) ||
+  f.id.toLowerCase().includes(search)
+ );
+
+ document.getElementById("farmerTable").innerHTML=
+ filtered.map(f=>`
+  <tr class="clickable" onclick="showDetails('${f.id}')">
+   <td>${f.id}</td>
+   <td><b>${f.name}</b></td>
+   <td>${f.crop}</td>
+   <td>₹${f.sales.toLocaleString("en-IN")}</td>
+   <td class="score">${f.score}</td>
+   <td><span class="status ${f.verification==="Pending"?"pending":""}">${f.verification}</span></td>
+  </tr>
+ `).join("") || `<tr><td colspan="6">No farmer found.</td></tr>`;
+}
+
+function showDetails(id){
+ const f=farmers.find(x=>x.id===id);
+ if(!f)return;
+
+ const box=document.getElementById("farmerDetails");
+ box.classList.remove("hidden");
+
+ box.innerHTML=`
+  <button class="back" onclick="closeDetails()">← Back to Farmers</button>
+  <h2>👨‍🌾 ${f.name}</h2>
+  <p style="color:#64748b;margin-top:6px">Farmer ID: ${f.id}</p>
+
+  <div class="detail-grid">
+   <div class="detail-item"><small>Farmer Name</small><h3>${f.name}</h3></div>
+   <div class="detail-item"><small>Phone Number</small><h3>${f.phone}</h3></div>
+   <div class="detail-item"><small>Address</small><h3>${f.address}</h3></div>
+   <div class="detail-item"><small>Land Area</small><h3>${f.land}</h3></div>
+   <div class="detail-item"><small>Main Crop</small><h3>${f.crop}</h3></div>
+   <div class="detail-item"><small>Total Recorded Sales</small><h3>₹${f.sales.toLocaleString("en-IN")}</h3></div>
+   <div class="detail-item"><small>Demo Credit Score</small><h3 class="score">${f.score}</h3></div>
+   <div class="detail-item"><small>Loan Status</small><h3>${f.loan}</h3></div>
+   <div class="detail-item"><small>Verification Status</small><h3>${f.verification}</h3></div>
+  </div>
+
+  <div class="panel">
+   <h3>📦 Farmer Product Information</h3>
+   <p>Sample Main Product: ${f.products}</p>
+  </div>
+
+  <div class="notice">
+   This farmer profile contains sample project data. Credit score and loan status are not official financial records.
+  </div>
+ `;
+
+ box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function closeDetails(){
+ const box=document.getElementById("farmerDetails");
+ box.classList.add("hidden");
+ box.innerHTML="";
+}
+
+function logout(){
+ document.getElementById("dashboard").classList.add("hidden");
+ document.getElementById("loginPage").classList.remove("hidden");
+ document.getElementById("logoutBtn").classList.add("hidden");
+ document.getElementById("username").value="";
+ document.getElementById("password").value="";
+ closeDetails();
+}
+</script>
+
+</body>
+</html>

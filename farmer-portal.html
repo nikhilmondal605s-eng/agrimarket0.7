@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Agri Connect - Farmer Portal</title>
+
+<style>
+:root{
+  --navy:#101d35;
+  --navy2:#172943;
+  --teal:#12b8a6;
+  --bg:#f3f6fa;
+  --text:#1c2b40;
+  --muted:#718096;
+  --white:#fff;
+  --border:#e5eaf1;
+  --red:#dc3545;
+  --green:#15966c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  background:linear-gradient(120deg,var(--navy),#174b62);
+  color:white;
+  padding:22px 18px;
+}
+header h2{margin:0;font-size:23px}
+header p{margin:7px 0 0;color:#b8d5df;font-size:13px}
+.container{max-width:1050px;margin:auto;padding:16px}
+.card{
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  margin:15px 0;
+  box-shadow:0 5px 22px #14253b0c;
+  border:1px solid var(--border);
+}
+h2,h3{color:var(--navy)}
+input,button{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border:1px solid var(--border);
+  border-radius:11px;
+  font-size:15px;
+}
+input:focus{outline:2px solid #12b8a633}
+button{
+  background:var(--teal);
+  color:white;
+  border:0;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:active{transform:scale(.98)}
+button.danger{background:var(--red)}
+button.secondary{background:var(--navy2)}
+.hidden{display:none!important}
+.small{font-size:12px;color:var(--muted);line-height:1.6}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{
+  background:#eef8f7;
+  border:1px solid #d5eeea;
+  padding:17px;
+  border-radius:14px;
+  flex:1;
+  min-width:100px;
+}
+.stat b{display:block;color:var(--navy);font-size:25px;margin-top:8px}
+nav{display:flex;gap:9px;flex-wrap:wrap}
+nav button{flex:1;min-width:130px}
+
+/* SENSOR DASHBOARD */
+.sensor-dashboard{
+  background:linear-gradient(135deg,#101d35,#173e53);
+  color:white;
+  border:0;
+  padding:20px;
+  overflow:hidden;
+}
+.sensor-dashboard h2{color:white}
+.dashboard-subtitle{color:#b6ccd8;font-size:13px;line-height:1.6}
+.connection-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:#ffffff10;
+  border:1px solid #ffffff20;
+  padding:15px;
+  border-radius:13px;
+  margin:17px 0;
+  color:#dcebf0;
+}
+.connection-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+  background:#f0a33a;
+  display:inline-block;
+}
+.connect-action{
+  width:auto;
+  margin-left:auto;
+  padding:10px 17px;
+  background:#12b8a6;
+}
+.sensor-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:13px;
+  margin-top:17px;
+}
+.sensor{
+  background:white;
+  color:var(--text);
+  padding:17px;
+  border-radius:16px;
+  min-height:165px;
+}
+.sensor-icon{
+  width:39px;height:39px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:#e5f7f4;
+  font-size:21px;
+  margin-bottom:13px;
+}
+.sensor h3{font-size:14px;margin:0;color:#40536a}
+.reading{
+  font-size:29px;
+  font-weight:800;
+  color:var(--navy);
+  margin:13px 0 9px;
+}
+.status{font-size:10px;font-weight:bold;color:#78899b}
+.mq .sensor-icon{background:#fff0e8}
+.soil .sensor-icon{background:#e8f7e9}
+.water .sensor-icon{background:#e8f3ff}
+.temp .sensor-icon{background:#fff2e5}
+.humidity .sensor-icon{background:#f0eaff}
+.sensor-alert{
+  display:none;
+  background:#b42332;
+  color:white;
+  padding:15px;
+  border-radius:13px;
+  font-weight:bold;
+  margin:15px 0;
+}
+.section-heading{color:white;margin-top:25px;font-size:17px}
+.test-panel{
+  background:#ffffff10;
+  border:1px solid #ffffff20;
+  border-radius:15px;
+  padding:16px;
+  margin-top:20px;
+}
+.test-panel h3{color:white}
+.test-panel .small{color:#b6ccd8}
+.product{
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  margin:12px 0;
+  background:white;
+}
+.product img{
+  width:100%;
+  max-height:190px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+/* CONNECTION POPUP */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:#071426b8;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:9999;
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:white;
+  width:100%;
+  max-width:480px;
+  max-height:90vh;
+  overflow-y:auto;
+  padding:22px;
+  border-radius:19px;
+  box-shadow:0 15px 50px #0004;
+}
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.modal-header h2{font-size:20px;margin:0}
+.close-btn{
+  width:36px;
+  height:36px;
+  padding:0;
+  margin:0;
+  background:#edf1f5;
+  color:#24364d;
+  font-size:22px;
+}
+.method{
+  border:1px solid var(--border);
+  padding:13px;
+  border-radius:12px;
+  margin:10px 0;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.method input{width:auto;margin:0}
+.method.selected{
+  border:2px solid var(--teal);
+  background:#effcf9;
+}
+.modal label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-top:12px;
+}
+.setup-message{
+  padding:12px;
+  background:#e8f7f1;
+  color:#126b4e;
+  border-radius:10px;
+  font-size:13px;
+  display:none;
+  line-height:1.5;
+}
+.setup-message.show{display:block}
+.modal-note{
+  background:#fff8e9;
+  padding:12px;
+  border-radius:10px;
+  color:#795a20;
+  font-size:12px;
+  line-height:1.5;
+  margin-top:14px;
+}
+@media(max-width:480px){
+  header h2{font-size:20px}
+  .container{padding:10px}
+  .card{padding:15px}
+  .sensor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sensor{padding:13px;min-height:155px}
+  .reading{font-size:25px}
+  .connect-action{width:100%;margin-left:0}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🌱 SMART AGRI CONNECT</h2>
+  <p>Smart Farming • Farmer Portal</p>
+</header>
+
+<div class="container">
+
+<section id="loginSection" class="card">
+  <h2>Farmer Login</h2>6
+  
+  <input id="username" placeholder="Farmer Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">LOGIN</button>
+  <p id="loginError" style="color:red"></p>
+</section>
+
+<section id="dashboard" class="hidden">
+
+  <div class="card">
+    <h2>Welcome, <span id="farmerName"></span></h2>
+    <nav>
+      <button onclick="showPage('productsPage')">My Products</button>
+      <button onclick="showPage('sensorPage')">Raspberry Pi Dashboard</button>
+    </nav>
+    <button class="danger" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="card">
+    <h3>Farmer Overview</h3>
+    <div class="stats">
+      <div class="stat">Products<b id="productCount">0</b></div>
+      <div class="stat">Ratings<b>0</b></div>
+      <div class="stat">Reviews<b>0</b></div>
+    </div>
+  </div>
+
+  <div id="productsPage" class="card">
+    <h2>My Products</h2>
+    <p class="small">Add and manage your farm products.</p>
+    <input id="productName" placeholder="Product Name">
+    <input id="productPrice" type="number" placeholder="Price ₹">
+    <input id="productImage" type="file" accept="image/*">
+    <button onclick="addProduct()">Add Product</button>
+    <div id="productList"></div>
+  </div>
+
+  <!-- RASPBERRY PI DASHBOARD -->
+  <div id="sensorPage" class="card sensor-dashboard hidden">
+
+    <h2>📡 Smart Sensor Dashboard</h2>
+    <p class="dashboard-subtitle">
+      Monitor your agricultural environment and sensor status.
+    </p>
+
+    <div class="connection-box">
+      <span class="connection-dot" id="connectionDot"></span>
+      <strong id="connectionStatus">Raspberry Pi: Not Connected</strong>
+      <span id="connectionOffline">• Offline</span>
+      <button class="connect-action" onclick="openConnection()">
+        ⚙ Connect Raspberry Pi
+      </button>
+    </div>
+
+    <p class="dashboard-subtitle">
+      Real-time readings will appear after Raspberry Pi and backend/API integration.
+    </p>
+
+    <div id="mqAlert" class="sensor-alert">
+      ⚠ HIGH GAS ALERT! MQ SENSOR LEVEL IS HIGH
+    </div>
+
+    <h3 class="section-heading">Environmental Sensor Readings</h3>
+
+    <div class="sensor-grid">
+
+      <div class="sensor mq">
+        <div class="sensor-icon">🔥</div>
+        <h3>MQ Gas Sensor</h3>
+        <div class="reading" id="mqValue">--</div>
+        <div class="status" id="mqStatus">● NOT CONNECTED</div>
+      </div>
+
+      <div class="sensor soil">
+        <div class="sensor-icon">🌱</div>
+        <h3>Soil Moisture</h3>
+        <div class="reading" id="soilValue">--</div>
+        <div class="status">● NOT CONNECTED</div>
+      </div>
+
+      <div class="sensor water">
+        <div class="sensor-icon">💧</div>
+        <h3>Water Turbidity Sensor</h3>
+        <div class="reading" id="waterValue">--</div>
+        <div class="status">● NOT CONNECTED</div>
+      </div>
+
+      <div class="sensor temp">
+        <div class="sensor-icon">🌡️</div>
+        <h3>Temperature</h3>
+        <div class="reading" id="tempValue">-- °C</div>
+        <div class="status">● NOT CONNECTED</div>
+      </div>
+
+      <div class="sensor humidity">
+        <div class="sensor-icon">💨</div>
+        <h3>Humidity</h3>
+        <div class="reading" id="humidityValue">-- %</div>
+        <div class="status">● NOT CONNECTED</div>
+      </div>
+
+    </div>
+
+    <div class="test-panel">
+      <h3>🧪 Sensor Alert Testing</h3>
+      <p class="small">
+        Test the MQ gas alert using a demo reading.
+        This is not a real hardware reading.
+      </p>
+      <button onclick="testMQ()">Test MQ High Alert</button>
+      <button class="secondary" onclick="resetMQ()">Reset Demo</button>
+      <p class="small">
+        Demo threshold: 700. Actual threshold requires sensor calibration.
+      </p>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- RASPBERRY PI CONNECTION POPUP -->
+<div class="modal-overlay" id="connectionModal"
+     onclick="outsideClose(event)">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h2>📡 Raspberry Pi Setup</h2>
+      <button class="close-btn" onclick="closeConnection()">×</button>
+    </div>
+
+    <p class="small">
+      Configure your Raspberry Pi connection details.
+    </p>
+
+    <h3>1. Select Connection Method</h3>
+
+    <label class="method selected" id="wifiMethod">
+      <input type="radio" name="connectionMethod"
+             value="wifi" checked
+             onchange="selectMethod('wifi')">
+      <span>
+        <strong>📶 Wi-Fi / Internet</strong><br>
+        <span class="small">Connect through your internet network.</span>
+      </span>
+    </label>
+
+    <label class="method" id="apiMethod">
+      <input type="radio" name="connectionMethod"
+             value="api"
+             onchange="selectMethod('api')">
+      <span>
+        <strong>🔗 API Connection</strong><br>
+        <span class="small">Connect Raspberry Pi to your website backend.</span>
+      </span>
+    </label>
+
+    <h3>2. Device Details</h3>
+
+    <label>Device ID</label>
+    <input id="deviceId" placeholder="Example: RPI-FARM-001">
+
+    <label>Backend API Endpoint</label>
+    <input id="apiEndpoint" type="url"
+           placeholder="https://your-backend-url.com/api/sensors">
+
+    <label>Device Authentication Key</label>
+    <input id="deviceKey" type="password"
+           placeholder="Enter device authentication key">
+
+    <button onclick="saveConnectionSetup()">
+      Save Connection Setup
+    </button>
+
+    <div id="setupMessage" class="setup-message"></div>
+
+    <div class="modal-note">
+      <strong>Important:</strong> This is currently a setup interface.
+      Saving these details does not connect the Raspberry Pi.
+      A working backend API, secure device authentication and
+      Raspberry Pi software are still required.
+    </div>
+
+    <button class="secondary" onclick="closeConnection()">
+      Close
+    </button>
+
+  </div>
+</div>
+
+<script>
+const farmers={
+  farmer1:"Farmer 1",
+  farmer2:"Farmer 2",
+  farmer3:"Farmer 3",
+  farmer4:"Farmer 4",
+  farmer5:"Farmer 5"
+};
+
+let currentFarmer="";
+
+function login(){
+  let u=document.getElementById("username").value.trim();
+  let p=document.getElementById("password").value;
+
+  if(farmers[u] && p==="1234"){
+    currentFarmer=u;
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    document.getElementById("farmerName").innerText=farmers[u];
+    showPage("productsPage");
+    loadProducts();
+  }else{
+    document.getElementById("loginError").innerText="Invalid Login Details";
+  }
+}
+
+function logout(){
+  currentFarmer="";
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("password").value="";
+}
+
+function showPage(page){
+  document.getElementById("productsPage").classList.add("hidden");
+  document.getElementById("sensorPage").classList.add("hidden");
+  document.getElementById(page).classList.remove("hidden");
+}
+
+function storageKey(){
+  return "products_"+currentFarmer;
+}
+
+function loadProducts(){
+  let products=JSON.parse(localStorage.getItem(storageKey())||"[]");
+  let list=document.getElementById("productList");
+  list.innerHTML="";
+  document.getElementById("productCount").innerText=products.length;
+
+  products.forEach((item,index)=>{
+    let div=document.createElement("div");
+    div.className="product";
+
+    let img=document.createElement("img");
+    img.src=item.image;
+
+    let title=document.createElement("h3");
+    title.textContent=item.name;
+
+    let price=document.createElement("p");
+    price.textContent="Price: ₹"+item.price;
+
+    let del=document.createElement("button");
+    del.className="danger";
+    del.textContent="Delete";
+    del.onclick=()=>deleteProduct(index);
+
+    div.append(img,title,price,del);
+    list.appendChild(div);
+  });
+}
+
+function addProduct(){
+  let name=document.getElementById("productName").value.trim();
+  let price=document.getElementById("productPrice").value;
+  let file=document.getElementById("productImage").files[0];
+
+  if(!name || !price || Number(price)<=0 || !file){
+    alert("Product name, price और photo डालें");
+    return;
+  }
+
+  let reader=new FileReader();
+
+  reader.onload=function(){
+    let products=JSON.parse(localStorage.getItem(storageKey())||"[]");
+
+    products.push({
+      name:name,
+      price:price,
+      image:reader.result
+    });
+
+    localStorage.setItem(storageKey(),JSON.stringify(products));
+
+    document.getElementById("productName").value="";
+    document.getElementById("productPrice").value="";
+    document.getElementById("productImage").value="";
+
+    loadProducts();
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function deleteProduct(index){
+  let products=JSON.parse(localStorage.getItem(storageKey())||"[]");
+  products.splice(index,1);
+  localStorage.setItem(storageKey(),JSON.stringify(products));
+  loadProducts();
+}
+
+/* CONNECTION POPUP FUNCTIONS */
+
+function openConnection(){
+  document.getElementById("connectionModal").classList.add("show");
+  document.getElementById("setupMessage").classList.remove("show");
+}
+
+function closeConnection(){
+  document.getElementById("connectionModal").classList.remove("show");
+}
+
+function outsideClose(event){
+  if(event.target.id==="connectionModal"){
+    closeConnection();
+  }
+}
+
+function selectMethod(method){
+  document.getElementById("wifiMethod").classList.toggle(
+    "selected",method==="wifi"
+  );
+
+  document.getElementById("apiMethod").classList.toggle(
+    "selected",method==="api"
+  );
+}
+
+function saveConnectionSetup(){
+
+  let deviceId=document.getElementById("deviceId").value.trim();
+  let endpoint=document.getElementById("apiEndpoint").value.trim();
+  let key=document.getElementById("deviceKey").value.trim();
+
+  let message=document.getElementById("setupMessage");
+
+  if(!deviceId || !endpoint || !key){
+    message.style.background="#fff0ed";
+    message.style.color="#a12b25";
+    message.innerText="Please enter Device ID, API Endpoint and Authentication Key.";
+    message.classList.add("show");
+    return;
+  }
+
+  try{
+    let url=new URL(endpoint);
+
+    if(url.protocol!=="https:" && url.hostname!=="localhost"){
+      throw new Error("HTTPS required");
+    }
+
+  }catch(error){
+    message.style.background="#fff0ed";
+    message.style.color="#a12b25";
+    message.innerText="Please enter a valid HTTPS API Endpoint.";
+    message.classList.add("show");
+    return;
+  }
+
+  let method=document.querySelector(
+    'input[name="connectionMethod"]:checked'
+  ).value;
+
+  /* Save non-secret configuration only.
+     Never save the authentication key in browser storage. */
+
+  let setup={
+    deviceId:deviceId,
+    endpoint:endpoint,
+    method:method
+  };
+
+  localStorage.setItem(
+    "raspberry_setup_"+currentFarmer,
+    JSON.stringify(setup)
+  );
+
+  message.style.background="#e8f7f1";
+  message.style.color="#126b4e";
+
+  message.innerText=
+    "Setup details saved on this device. Raspberry Pi is still NOT CONNECTED. Backend API integration is required.";
+
+  message.classList.add("show");
+}
+
+/* MQ SENSOR DEMO */
+
+function updateMQ(reading){
+  document.getElementById("mqValue").innerText=reading;
+
+  let alertBox=document.getElementById("mqAlert");
+  let status=document.getElementById("mqStatus");
+
+  if(reading>700){
+    alertBox.style.display="block";
+    status.innerText="● HIGH ALERT (DEMO)";
+    status.style.color="#dc3545";
+  }else{
+    alertBox.style.display="none";
+    status.innerText="● NORMAL (DEMO)";
+    status.style.color="#15966c";
+  }
+}
+
+function testMQ(){
+  updateMQ(750);
+}
+
+function resetMQ(){
+  document.getElementById("mqValue").innerText="--";
+  document.getElementById("mqStatus").innerText="● NOT CONNECTED";
+  document.getElementById("mqStatus").style.color="#78899b";
+  document.getElementById("mqAlert").style.display="none";
+}
+</script>
+
+</body>
+</html>

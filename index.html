@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriMarket | Welcome</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle, #064b2b, #002c1b);
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.intro {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px;
+  position: relative;
+}
+.logo {
+  width: 110px;
+  height: 110px;
+  border-radius: 28px;
+  background: linear-gradient(135deg,#22c55e,#087b3c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65px;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 40px #0005;
+}
+.brand {
+  font-size: 40px;
+  font-weight: bold;
+}
+.brand span {
+  color: #facc15;
+}
+.line {
+  width: 200px;
+  height: 1px;
+  background: #16834b;
+  margin: 65px 0;
+}
+.name {
+  font-size: clamp(28px, 8vw, 48px);
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+.founder {
+  color: #7ce6a7;
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 35px;
+}
+.entering {
+  margin-top: 95px;
+  color: #43b879;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 17px;
+}
+.timer {
+  width: 108px;
+  height: 108px;
+  border: 5px solid #29d27c;
+  border-left-color: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: 30px;
+  animation: rotate 2s linear infinite;
+}
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+.skip {
+  margin-top: 75px;
+  color: #52bd80;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: bold;
+}
+.skip:active {
+  color: white;
+}
+</style>
+</head>
+<body>
+<div class="intro">
+  <div class="logo">🌱</div>
+
+  <div class="brand">Agri<span>Market</span></div>
+
+  <div class="line"></div>
+
+  <div class="name">NIKHIL MONDAL</div>
+
+  <div class="founder">Founder of AgriMarket</div>
+
+  <div class="entering">
+    ENTERING MARKETPLACE IN
+  </div>
+
+  <div class="timer" id="timer">6</div>
+
+  <a href="homepage.html" class="skip">
+    Skip to homepage →
+  </a>
+</div>
+
+<script>
+let seconds = 6;
+const timer = document.getElementById("timer");
+
+const countdown = setInterval(() => {
+  seconds--;
+  timer.textContent = seconds;
+
+  if (seconds <= 0) {
+    clearInterval(countdown);
+    window.location.href = "homepage.html";
+  }
+}, 1000);
+</script>
+</body>
+</html>
